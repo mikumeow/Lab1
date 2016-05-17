@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8"/>
+		<title>Lab1-Notebook</title>
+		<script src="lib/angular.min.js"></script>
+	    <link rel="stylesheet" href="lib/bootstrap.min.css">
+	    <script src="lib/ui-bootstrap-tpls.js"></script>
+		<link href="style.css" rel="stylesheet" />
+		<script src="script.js"></script>
+	</head>
+
+	<body ng-app = "myApp"  ng-controller="textAreaCtrl">
+
+		<nav class="{{activePage}}" ng-click="$event.preventDefault()">
+			<a href="#" class="homePage" ng-click="activePage='homePage'">Home</a>
+			<a href="#" class="addPage" ng-click="activePage='addPage'">Add</a>
+			<a href="#" class="listPage" ng-click="activePage='listPage'">List</a>
+		</nav>
+
+<!--                                        home -->
+		<div class="tag" ng-show="activePage=='homePage' || !activePage">
+			{{todayFormat}}今日安排<br><br>
+			<div ng-repeat="x in todoList| searchFor:todayFormat" style="padding-left: 50px;">
+				---
+		    	<span class="text" ng-bind="x.todoText"></span>
+			</div>
+		</div>
+
+<!--                                        add -->
+		<div class="tag" ng-show="activePage=='addPage'">
+			<div class="inputBox">
+		        <section id="dateTeller">
+		            <datepicker ng-model="dt" min-date="minDate" show-weeks="true" class="timeTable"></datepicker>
+		        </section> 
+	        </div>
+	        <div class="inputBox">
+				<form ng-submit='addNote()'>
+		            <textarea type="text" class="inputText" ng-model="todoInput" ng-change="checkText()" size="50" placeholder="在这里输入主要内容">
+		            </textarea>
+		            <pre id="showDate">日期:<em>{{dt | date:'fullDate'}}</em></pre>
+					<input id="inputSubmit"type="submit" value="添加">
+		            <p id="inputCheck" ng-model="inputWarn">{{warnMessage}}</p>
+	            </form>
+			</div>
+		</div>
+
+<!--                                        list -->
+		<div class="tag" ng-show="activePage=='listPage'">
+			<!-- <b>{{activePage}}</b> -->
+			<input type="text" class="bar" ng-model="searchString" placeholder="搜索" />
+			<div ng-repeat="x in todoList| searchFor:searchString">
+			    <input type="checkbox" ng-model="x.del"> 
+		    	<span class="text" ng-bind="x.date.getFullYear()+'年'+x.date.getMonth()+'月'+x.date.getDate()+'日 星期'+x.date.getDay()+' -   '"></span>
+		    	<span class="text" ng-bind="x.todoText"></span>
+			</div>
+			<p><button id="delBtn"ng-click="remove()">删除选中的记录</button></p>
+		</div>
+
+
+
+	</body>
+</html>
